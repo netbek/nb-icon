@@ -1,3 +1,3 @@
 # nb-icon
 
-AngularJS directives for SVG
+AngularJS directive for scalable icons (SVG with PNG fallback)
