@@ -11,11 +11,15 @@
 
 	angular
 		.module('nb.icon', [
+			'pasvaz.bindonce',
 			'nb.modernizr',
-			'nb.svg'
+			'nb.svg',
+			'nb.icon.templates'
 		])
 		.provider('nbIconConfig', nbIconConfig)
-		.directive('nbIcon', nbIconDirective);
+		.controller('nbIconController', nbIconController)
+		.directive('nbIcon', nbIconDirective)
+		.directive('nbIconOnce', nbIconOnceDirective);
 
 	function nbIconConfig () {
 		var config = {
@@ -33,22 +37,48 @@
 		};
 	}
 
-	nbIconDirective.$inject = ['nbIconConfig', 'Modernizr', '_'];
-	function nbIconDirective (nbIconConfig, Modernizr, _) {
+	nbIconController.$inject = ['$scope', '$attrs', 'Modernizr', 'nbIconConfig'];
+	function nbIconController ($scope, $attrs, Modernizr, nbIconConfig) {
+		this.attrs = function attrs (scope) {
+			return {
+				id: $attrs.id,
+				hoverId: $attrs.hoverId,
+				title: $attrs.title,
+				width: $attrs.width,
+				height: $attrs.height,
+				color: $attrs.color,
+				hoverColor: $attrs.hoverColor
+			};
+		};
+
+		this.update = function (options) {
+			options.pngUrl = nbIconConfig.pngUrl;
+			options.prefix = nbIconConfig.prefix;
+			options.canInlineSvg = Modernizr.inlinesvg;
+
+			if (!options.width) {
+				options.width = nbIconConfig.size;
+			}
+			if (!options.height) {
+				options.height = nbIconConfig.size;
+			}
+			if (!options.hoverId) {
+				options.hoverId = options.id;
+			}
+			if (!options.hoverColor) {
+				options.hoverColor = options.color;
+			}
+
+			$scope.icon = options;
+		};
+	}
+
+	function nbIconDirective () {
 		return {
-			restrict: 'A',
+			restrict: 'EA',
 			replace: true,
-			template:
-				'<span aria-hidden="true" ng-attr-class="{{prefix + \' \' + prefix + \'-\' + id + (hoverId ? \' has-hover\' : \'\')}}" ng-attr-title="{{title}}">\n\
-					<svg class="default" ng-if="canInlineSvg" nb-svg-view-box data-width="{{width}}" data-height="{{height}}">\n\
-						<use xlink:href="" nb-svg-xlink-href="{{\'#\' + prefix + \'-\' + id}}"></use>\n\
-					</svg>\n\
-					<svg class="hover" ng-if="canInlineSvg && hoverId" nb-svg-view-box data-width="{{width}}" data-height="{{height}}">\n\
-						<use xlink:href="" nb-svg-xlink-href="{{\'#\' + prefix + \'-\' + hoverId}}"></use>\n\
-					</svg>\n\
-					<img ng-if="!canInlineSvg" ng-attr-src="{{pngUrl + prefix + \'-\' + id + (color ? \'-\' + color : color) + \'.png\'}}" alt="" class="fallback" />\n\
-					<img ng-if="!canInlineSvg" ng-attr-src="{{pngUrl + prefix + \'-\' + id + (hoverColor ? \'-\' + hoverColor : hoverColor) + \'.png\'}}" alt="" class="fallback-hover" />\n\
-				</span>',
+			controller: 'nbIconController',
+			templateUrl: 'templates/nb-icon.html',
 			scope: {
 				id: '@',
 				hoverId: '@?',
@@ -58,27 +88,119 @@
 				color: '@?',
 				hoverColor: '@?'
 			},
-			link: function (scope, element, attrs) {
-				scope.pngUrl = nbIconConfig.pngUrl;
-				scope.prefix = nbIconConfig.prefix;
-				scope.canInlineSvg = Modernizr.inlinesvg;
+			link: function (scope, element, attrs, controller) {
+				var watch = scope.$watch(controller.attrs, function (newValue, oldValue, scope) {
+					controller.update(newValue);
+				}, true);
 
-				attrs.$observe('title', function (value) {
-					scope.title = angular.isDefined(value) ? value : '';
+				scope.$on('$destroy', function () {
+					watch();
 				});
-				attrs.$observe('width', function (value) {
-					scope.width = angular.isDefined(value) ? value : nbIconConfig.size;
-				});
-				attrs.$observe('height', function (value) {
-					scope.height = angular.isDefined(value) ? value : nbIconConfig.size;
-				});
-				attrs.$observe('color', function (value) {
-					scope.color = angular.isDefined(value) ? value : '';
-				});
-				attrs.$observe('hoverColor', function (value) {
-					scope.hoverColor = angular.isDefined(value) && !_.isEmpty(value) ? value : scope.color;
+			}
+		};
+	}
+
+	/**
+	 * One-time binding with no watches.
+	 */
+	function nbIconOnceDirective () {
+		return {
+			restrict: 'EA',
+			replace: true,
+			controller: 'nbIconController',
+			templateUrl: 'templates/nb-icon-once.html',
+			scope: {
+				id: '@',
+				hoverId: '@?',
+				title: '@?',
+				width: '@?',
+				height: '@?',
+				color: '@?',
+				hoverColor: '@?'
+			},
+			link: function (scope, element, attrs, controller) {
+				var watch = scope.$watch(controller.attrs, function (newValue, oldValue, scope) {
+					controller.update(newValue);
+					watch();
+				}, true);
+
+				scope.$on('$destroy', function () {
+					watch();
 				});
 			}
 		};
 	}
 })(window, window.angular);
+angular.module('nb.icon.templates', ['templates/nb-icon-once.html', 'templates/nb-icon.html']);
+
+angular.module("templates/nb-icon-once.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("templates/nb-icon-once.html",
+    "<span bindonce=\"icon\"\n" +
+    "	  bo-attr\n" +
+    "	  bo-attr-class=\"icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : '')\"\n" +
+    "	  bo-attr-title=\"icon.title\"\n" +
+    "	  aria-hidden=\"true\">\n" +
+    "	<svg bo-if=\"icon.canInlineSvg\"\n" +
+    "		 nb-svg-view-box-once\n" +
+    "		 bo-attr\n" +
+    "		 bo-attr-data-width=\"icon.width\"\n" +
+    "		 bo-attr-data-height=\"icon.height\"\n" +
+    "		 class=\"default\">\n" +
+    "	<use xlink:href=\"\"\n" +
+    "		 nb-svg-xlink-href-once\n" +
+    "		 bo-attr\n" +
+    "		 bo-attr-nb-svg-xlink-href-once-value=\"'#' + icon.prefix + '-' + icon.id\"></use>\n" +
+    "	</svg>\n" +
+    "	<svg bo-if=\"icon.canInlineSvg && icon.hoverId\"\n" +
+    "		 nb-svg-view-box-once\n" +
+    "		 bo-attr\n" +
+    "		 bo-attr-data-width=\"icon.width\"\n" +
+    "		 bo-attr-data-height=\"icon.height\"\n" +
+    "		 class=\"hover\">\n" +
+    "	<use xlink:href=\"\"\n" +
+    "		 nb-svg-xlink-href-once\n" +
+    "		 bo-attr\n" +
+    "		 bo-attr-nb-svg-xlink-href-once-value=\"'#' + icon.prefix + '-' + icon.hoverId\"></use>\n" +
+    "	</svg>\n" +
+    "	<img bo-if=\"!icon.canInlineSvg\"\n" +
+    "		 bo-attr\n" +
+    "		 bo-attr-src=\"icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'\"\n" +
+    "		 alt=\"\"\n" +
+    "		 class=\"fallback\" />\n" +
+    "	<img bo-if=\"!icon.canInlineSvg && icon.hoverId\"\n" +
+    "		 bo-attr\n" +
+    "		 bo-attr-src=\"icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'\"\n" +
+    "		 alt=\"\"\n" +
+    "		 class=\"fallback-hover\" />\n" +
+    "</span>");
+}]);
+
+angular.module("templates/nb-icon.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("templates/nb-icon.html",
+    "<span ng-attr-class=\"{{icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : '')}}\"\n" +
+    "	  ng-attr-title=\"{{icon.title}}\"\n" +
+    "	  aria-hidden=\"true\">\n" +
+    "	<svg ng-if=\"icon.canInlineSvg\"\n" +
+    "		 nb-svg-view-box\n" +
+    "		 data-width=\"{{icon.width}}\"\n" +
+    "		 data-height=\"{{icon.height}}\"\n" +
+    "		 class=\"default\">\n" +
+    "	<use xlink:href=\"\" nb-svg-xlink-href=\"{{'#' + icon.prefix + '-' + icon.id}}\"></use>\n" +
+    "	</svg>\n" +
+    "	<svg ng-if=\"icon.canInlineSvg && icon.hoverId\"\n" +
+    "		 nb-svg-view-box\n" +
+    "		 data-width=\"{{icon.width}}\"\n" +
+    "		 data-height=\"{{icon.height}}\"\n" +
+    "		 class=\"hover\">\n" +
+    "	<use xlink:href=\"\" nb-svg-xlink-href=\"{{'#' + icon.prefix + '-' + icon.hoverId}}\"></use>\n" +
+    "	</svg>\n" +
+    "	<img ng-if=\"!icon.canInlineSvg\"\n" +
+    "		 ng-attr-src=\"{{icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'}}\"\n" +
+    "		 alt=\"\"\n" +
+    "		 class=\"fallback\" />\n" +
+    "	<img ng-if=\"!icon.canInlineSvg && icon.hoverId\"\n" +
+    "		 ng-attr-src=\"{{icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'}}\"\n" +
+    "		 alt=\"\"\n" +
+    "		 class=\"fallback-hover\" />\n" +
+    "</span>");
+}]);

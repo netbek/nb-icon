@@ -10,11 +10,6 @@ module.exports = function (grunt) {
 
 	var pkg = grunt.file.readJSON('package.json');
 
-	grunt.loadNpmTasks('grunt-contrib-clean');
-	grunt.loadNpmTasks('grunt-contrib-concat');
-	grunt.loadNpmTasks('grunt-contrib-cssmin');
-	grunt.loadNpmTasks('grunt-contrib-uglify');
-
 	grunt.initConfig({
 		pkg: pkg,
 		meta: {
@@ -30,8 +25,19 @@ module.exports = function (grunt) {
 			all: ['Gruntfile.js', 'tasks/**/*.js', 'tests/tests/*.js']
 		},
 		clean: {
-			init: ['build', 'dist'],
-			exit: ['build'],
+			init: ['build', 'dist', 'tmp'],
+			exit: ['build', 'tmp']
+		},
+		html2js: {
+			dist: {
+				options: {
+					module: 'nb.icon.templates',
+				},
+				files: [{
+						src: ['src/templates/*.html'],
+						dest: 'build/js/<%= pkg.name %>-templates.js',
+					}]
+			}
 		},
 		concat: {
 			distCss: {
@@ -49,9 +55,9 @@ module.exports = function (grunt) {
 			},
 			dist: {
 				files: [{
-					src: ['src/css/**/*.css'],
-					dest: 'dist/css/<%= pkg.name %>.min.css'
-				}]
+						src: ['src/css/**/*.css'],
+						dest: 'dist/css/<%= pkg.name %>.min.css'
+					}]
 			}
 		},
 		uglify: {
@@ -62,15 +68,45 @@ module.exports = function (grunt) {
 				src: ['dist/js/<%= pkg.name %>.js'],
 				dest: 'dist/js/<%= pkg.name %>.min.js'
 			}
+		},
+		svgstore: {
+			options: {},
+			src: {
+				files: {
+					'demo/svg/icon.svg': 'demo/svg/icon/*.svg'
+				}
+			}
+		},
+		svg2png_colorfy: {
+			dist: {
+				options: {
+					colors: {
+						black: '#000',
+						blue: '#0000FF'
+					}
+				},
+				files: [{cwd: 'demo/svg/icon/', src: ['*.svg'], dest: 'demo/img/'}]
+			}
 		}
 	});
 
+	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-cssmin');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-html2js');
+	grunt.loadNpmTasks('grunt-svg2png-colorfy');
+	grunt.loadNpmTasks('grunt-svgstore');
+
 	grunt.registerTask('default', [
 		'clean:init',
+		'html2js',
 		'concat',
 		'cssmin',
 		'uglify',
-		'clean:exit',
+		'svgstore',
+		'svg2png_colorfy',
+		'clean:exit'
 	]);
 
 };

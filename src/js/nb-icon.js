@@ -11,11 +11,15 @@
 
 	angular
 		.module('nb.icon', [
+			'pasvaz.bindonce',
 			'nb.modernizr',
-			'nb.svg'
+			'nb.svg',
+			'nb.icon.templates'
 		])
 		.provider('nbIconConfig', nbIconConfig)
-		.directive('nbIcon', nbIconDirective);
+		.controller('nbIconController', nbIconController)
+		.directive('nbIcon', nbIconDirective)
+		.directive('nbIconOnce', nbIconOnceDirective);
 
 	function nbIconConfig () {
 		var config = {
@@ -33,22 +37,48 @@
 		};
 	}
 
-	nbIconDirective.$inject = ['nbIconConfig', 'Modernizr', '_'];
-	function nbIconDirective (nbIconConfig, Modernizr, _) {
+	nbIconController.$inject = ['$scope', '$attrs', 'Modernizr', 'nbIconConfig'];
+	function nbIconController ($scope, $attrs, Modernizr, nbIconConfig) {
+		this.attrs = function attrs (scope) {
+			return {
+				id: $attrs.id,
+				hoverId: $attrs.hoverId,
+				title: $attrs.title,
+				width: $attrs.width,
+				height: $attrs.height,
+				color: $attrs.color,
+				hoverColor: $attrs.hoverColor
+			};
+		};
+
+		this.update = function (options) {
+			options.pngUrl = nbIconConfig.pngUrl;
+			options.prefix = nbIconConfig.prefix;
+			options.canInlineSvg = Modernizr.inlinesvg;
+
+			if (!options.width) {
+				options.width = nbIconConfig.size;
+			}
+			if (!options.height) {
+				options.height = nbIconConfig.size;
+			}
+			if (!options.hoverId) {
+				options.hoverId = options.id;
+			}
+			if (!options.hoverColor) {
+				options.hoverColor = options.color;
+			}
+
+			$scope.icon = options;
+		};
+	}
+
+	function nbIconDirective () {
 		return {
-			restrict: 'A',
+			restrict: 'EA',
 			replace: true,
-			template:
-				'<span aria-hidden="true" ng-attr-class="{{prefix + \' \' + prefix + \'-\' + id + (hoverId ? \' has-hover\' : \'\')}}" ng-attr-title="{{title}}">\n\
-					<svg class="default" ng-if="canInlineSvg" nb-svg-view-box data-width="{{width}}" data-height="{{height}}">\n\
-						<use xlink:href="" nb-svg-xlink-href="{{\'#\' + prefix + \'-\' + id}}"></use>\n\
-					</svg>\n\
-					<svg class="hover" ng-if="canInlineSvg && hoverId" nb-svg-view-box data-width="{{width}}" data-height="{{height}}">\n\
-						<use xlink:href="" nb-svg-xlink-href="{{\'#\' + prefix + \'-\' + hoverId}}"></use>\n\
-					</svg>\n\
-					<img ng-if="!canInlineSvg" ng-attr-src="{{pngUrl + prefix + \'-\' + id + (color ? \'-\' + color : color) + \'.png\'}}" alt="" class="fallback" />\n\
-					<img ng-if="!canInlineSvg" ng-attr-src="{{pngUrl + prefix + \'-\' + id + (hoverColor ? \'-\' + hoverColor : hoverColor) + \'.png\'}}" alt="" class="fallback-hover" />\n\
-				</span>',
+			controller: 'nbIconController',
+			templateUrl: 'templates/nb-icon.html',
 			scope: {
 				id: '@',
 				hoverId: '@?',
@@ -58,25 +88,44 @@
 				color: '@?',
 				hoverColor: '@?'
 			},
-			link: function (scope, element, attrs) {
-				scope.pngUrl = nbIconConfig.pngUrl;
-				scope.prefix = nbIconConfig.prefix;
-				scope.canInlineSvg = Modernizr.inlinesvg;
+			link: function (scope, element, attrs, controller) {
+				var watch = scope.$watch(controller.attrs, function (newValue, oldValue, scope) {
+					controller.update(newValue);
+				}, true);
 
-				attrs.$observe('title', function (value) {
-					scope.title = angular.isDefined(value) ? value : '';
+				scope.$on('$destroy', function () {
+					watch();
 				});
-				attrs.$observe('width', function (value) {
-					scope.width = angular.isDefined(value) ? value : nbIconConfig.size;
-				});
-				attrs.$observe('height', function (value) {
-					scope.height = angular.isDefined(value) ? value : nbIconConfig.size;
-				});
-				attrs.$observe('color', function (value) {
-					scope.color = angular.isDefined(value) ? value : '';
-				});
-				attrs.$observe('hoverColor', function (value) {
-					scope.hoverColor = angular.isDefined(value) && !_.isEmpty(value) ? value : scope.color;
+			}
+		};
+	}
+
+	/**
+	 * One-time binding with no watches.
+	 */
+	function nbIconOnceDirective () {
+		return {
+			restrict: 'EA',
+			replace: true,
+			controller: 'nbIconController',
+			templateUrl: 'templates/nb-icon-once.html',
+			scope: {
+				id: '@',
+				hoverId: '@?',
+				title: '@?',
+				width: '@?',
+				height: '@?',
+				color: '@?',
+				hoverColor: '@?'
+			},
+			link: function (scope, element, attrs, controller) {
+				var watch = scope.$watch(controller.attrs, function (newValue, oldValue, scope) {
+					controller.update(newValue);
+					watch();
+				}, true);
+
+				scope.$on('$destroy', function () {
+					watch();
 				});
 			}
 		};

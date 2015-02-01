@@ -23,3 +23,7 @@ nbproject
 node_modules/
 # Bower components directory
 bower_components/
+# Demo build files and directories
+demo/img/
+demo/svg/icon.svg
+tmp/
