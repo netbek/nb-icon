@@ -11,6 +11,7 @@
 
 	angular
 		.module('nb.icon.demo', [
+			'angularStats',
 			'nb.icon'
 		])
 		.config(['nbIconConfigProvider',
@@ -21,49 +22,13 @@
 					size: 256
 				});
 			}])
-		.directive('demoTable', demoTableDirective)
+		.directive('childScope', childScopeDirective)
 		.controller('MainController', MainController)
 		.run(runBlock);
 
-	// http://stackoverflow.com/a/18526757
-	function c (root) {
-		var watchers = [];
-
-		var f = function (element) {
-			angular.forEach(['$scope', '$isolateScope'], function (scopeProperty) {
-				if (element.data() && element.data().hasOwnProperty(scopeProperty)) {
-					angular.forEach(element.data()[scopeProperty].$$watchers, function (watcher) {
-						watchers.push(watcher);
-					});
-				}
-			});
-
-			angular.forEach(element.children(), function (childElement) {
-				f(angular.element(childElement));
-			});
-		};
-
-		f(root);
-
-		// Remove duplicate watchers
-		var watchersWithoutDuplicates = [];
-		angular.forEach(watchers, function (item) {
-			if (watchersWithoutDuplicates.indexOf(item) < 0) {
-				watchersWithoutDuplicates.push(item);
-			}
-		});
-
-		return watchersWithoutDuplicates.length;
-	}
-
-	function demoTableDirective () {
+	function childScopeDirective () {
 		return {
-			scope: true,
-			link: function (scope, element) {
-				scope.countWatches = function () {
-					return c(element) - 1;
-				};
-			}
+			scope: true
 		};
 	}
 
