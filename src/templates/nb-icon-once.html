@@ -1,38 +1,26 @@
-<span bindonce="icon"
-	  bo-attr
-	  bo-attr-class="icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : '')"
-	  bo-attr-title="icon.title"
+<span ng-attr-class="{{::(icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : ''))}}"
+	  ng-attr-title="{{::icon.title}}"
 	  aria-hidden="true">
-	<svg bo-if="icon.canInlineSvg"
+	<svg ng-if="::(icon.canInlineSvg)"
 		 nb-svg-view-box-once
-		 bo-attr
-		 bo-attr-data-width="icon.width"
-		 bo-attr-data-height="icon.height"
+		 data-width="{{::icon.width}}"
+		 data-height="{{::icon.height}}"
 		 class="default">
-	<use xlink:href=""
-		 nb-svg-xlink-href-once
-		 bo-attr
-		 bo-attr-nb-svg-xlink-href-once-value="'#' + icon.prefix + '-' + icon.id"></use>
+	<use xlink:href="" nb-svg-xlink-href="{{::('#' + icon.prefix + '-' + icon.id)}}"></use>
 	</svg>
-	<svg bo-if="icon.canInlineSvg && icon.hoverId"
+	<svg ng-if="::(icon.canInlineSvg && icon.hoverId)"
 		 nb-svg-view-box-once
-		 bo-attr
-		 bo-attr-data-width="icon.width"
-		 bo-attr-data-height="icon.height"
+		 data-width="{{::icon.width}}"
+		 data-height="{{::icon.height}}"
 		 class="hover">
-	<use xlink:href=""
-		 nb-svg-xlink-href-once
-		 bo-attr
-		 bo-attr-nb-svg-xlink-href-once-value="'#' + icon.prefix + '-' + icon.hoverId"></use>
+	<use xlink:href="" nb-svg-xlink-href="{{::('#' + icon.prefix + '-' + icon.hoverId)}}"></use>
 	</svg>
-	<img bo-if="!icon.canInlineSvg"
-		 bo-attr
-		 bo-attr-src="icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'"
+	<img ng-if="::(!icon.canInlineSvg)"
+		 ng-src="{{::(icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png')}}"
 		 alt=""
 		 class="fallback" />
-	<img bo-if="!icon.canInlineSvg && icon.hoverId"
-		 bo-attr
-		 bo-attr-src="icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'"
+	<img ng-if="::(!icon.canInlineSvg && icon.hoverId)"
+		 ng-src="{{::(icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png')}}"
 		 alt=""
 		 class="fallback-hover" />
 </span>

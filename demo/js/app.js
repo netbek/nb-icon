@@ -34,11 +34,17 @@
 
 	MainController.$inject = ['$timeout', '$scope'];
 	function MainController ($timeout, $scope) {
-		$timeout(function () {
-			$scope.$apply(function () {
-				console.log('Firing $scope.apply() from MainController');
-			});
-		}, 1000);
+		$scope.icons = [
+			{
+				id: '0008-quill'
+			},
+			{
+				id: '0014-image'
+			},
+			{
+				id: '0016-camera'
+			}
+		];
 	}
 
 	runBlock.$inject = ['Modernizr', '$window'];

@@ -11,7 +11,6 @@
 
 	angular
 		.module('nb.icon', [
-			'pasvaz.bindonce',
 			'nb.modernizr',
 			'nb.svg',
 			'nb.icon.templates'
@@ -76,7 +75,6 @@
 	function nbIconDirective () {
 		return {
 			restrict: 'EA',
-			replace: true,
 			controller: 'nbIconController',
 			templateUrl: 'templates/nb-icon.html',
 			scope: {
@@ -106,7 +104,6 @@
 	function nbIconOnceDirective () {
 		return {
 			restrict: 'EA',
-			replace: true,
 			controller: 'nbIconController',
 			templateUrl: 'templates/nb-icon-once.html',
 			scope: {
@@ -135,41 +132,29 @@ angular.module('nb.icon.templates', ['templates/nb-icon-once.html', 'templates/n
 
 angular.module("templates/nb-icon-once.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/nb-icon-once.html",
-    "<span bindonce=\"icon\"\n" +
-    "	  bo-attr\n" +
-    "	  bo-attr-class=\"icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : '')\"\n" +
-    "	  bo-attr-title=\"icon.title\"\n" +
+    "<span ng-attr-class=\"{{::(icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : ''))}}\"\n" +
+    "	  ng-attr-title=\"{{::icon.title}}\"\n" +
     "	  aria-hidden=\"true\">\n" +
-    "	<svg bo-if=\"icon.canInlineSvg\"\n" +
+    "	<svg ng-if=\"::(icon.canInlineSvg)\"\n" +
     "		 nb-svg-view-box-once\n" +
-    "		 bo-attr\n" +
-    "		 bo-attr-data-width=\"icon.width\"\n" +
-    "		 bo-attr-data-height=\"icon.height\"\n" +
+    "		 data-width=\"{{::icon.width}}\"\n" +
+    "		 data-height=\"{{::icon.height}}\"\n" +
     "		 class=\"default\">\n" +
-    "	<use xlink:href=\"\"\n" +
-    "		 nb-svg-xlink-href-once\n" +
-    "		 bo-attr\n" +
-    "		 bo-attr-nb-svg-xlink-href-once-value=\"'#' + icon.prefix + '-' + icon.id\"></use>\n" +
+    "	<use xlink:href=\"\" nb-svg-xlink-href=\"{{::('#' + icon.prefix + '-' + icon.id)}}\"></use>\n" +
     "	</svg>\n" +
-    "	<svg bo-if=\"icon.canInlineSvg && icon.hoverId\"\n" +
+    "	<svg ng-if=\"::(icon.canInlineSvg && icon.hoverId)\"\n" +
     "		 nb-svg-view-box-once\n" +
-    "		 bo-attr\n" +
-    "		 bo-attr-data-width=\"icon.width\"\n" +
-    "		 bo-attr-data-height=\"icon.height\"\n" +
+    "		 data-width=\"{{::icon.width}}\"\n" +
+    "		 data-height=\"{{::icon.height}}\"\n" +
     "		 class=\"hover\">\n" +
-    "	<use xlink:href=\"\"\n" +
-    "		 nb-svg-xlink-href-once\n" +
-    "		 bo-attr\n" +
-    "		 bo-attr-nb-svg-xlink-href-once-value=\"'#' + icon.prefix + '-' + icon.hoverId\"></use>\n" +
+    "	<use xlink:href=\"\" nb-svg-xlink-href=\"{{::('#' + icon.prefix + '-' + icon.hoverId)}}\"></use>\n" +
     "	</svg>\n" +
-    "	<img bo-if=\"!icon.canInlineSvg\"\n" +
-    "		 bo-attr\n" +
-    "		 bo-attr-src=\"icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'\"\n" +
+    "	<img ng-if=\"::(!icon.canInlineSvg)\"\n" +
+    "		 ng-src=\"{{::(icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png')}}\"\n" +
     "		 alt=\"\"\n" +
     "		 class=\"fallback\" />\n" +
-    "	<img bo-if=\"!icon.canInlineSvg && icon.hoverId\"\n" +
-    "		 bo-attr\n" +
-    "		 bo-attr-src=\"icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'\"\n" +
+    "	<img ng-if=\"::(!icon.canInlineSvg && icon.hoverId)\"\n" +
+    "		 ng-src=\"{{::(icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png')}}\"\n" +
     "		 alt=\"\"\n" +
     "		 class=\"fallback-hover\" />\n" +
     "</span>");
@@ -195,11 +180,11 @@ angular.module("templates/nb-icon.html", []).run(["$templateCache", function($te
     "	<use xlink:href=\"\" nb-svg-xlink-href=\"{{'#' + icon.prefix + '-' + icon.hoverId}}\"></use>\n" +
     "	</svg>\n" +
     "	<img ng-if=\"!icon.canInlineSvg\"\n" +
-    "		 ng-attr-src=\"{{icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'}}\"\n" +
+    "		 ng-src=\"{{icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'}}\"\n" +
     "		 alt=\"\"\n" +
     "		 class=\"fallback\" />\n" +
     "	<img ng-if=\"!icon.canInlineSvg && icon.hoverId\"\n" +
-    "		 ng-attr-src=\"{{icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'}}\"\n" +
+    "		 ng-src=\"{{icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'}}\"\n" +
     "		 alt=\"\"\n" +
     "		 class=\"fallback-hover\" />\n" +
     "</span>");

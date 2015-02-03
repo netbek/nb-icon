@@ -78,6 +78,32 @@
 		<table child-scope id="scope2">
 			<thead>
 				<tr>
+					<th colspan="2">Normal binding with ng-repeat</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="icon in icons">
+				<td>
+					<span nb-icon
+						  data-id="{{icon.id}}"
+						  data-color="black"></span>
+				</td>
+				<td ng-bind="icon.id"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div angular-stats
+						 watch-count-root="#scope2"
+						 watch-count=".watch-count"
+						 on-watch-count-update="onWatchCountUpdate(watchCount)">
+						Number of watches: <span class="watch-count"></span>
+					</div>
+				</td>
+			</tr>
+		</table>
+
+		<table child-scope id="scope3">
+			<thead>
+				<tr>
 					<th colspan="2">One-time binding</th>
 				</tr>
 			</thead>
@@ -120,7 +146,7 @@
 			<tr>
 				<td colspan="2">
 					<div angular-stats
-						 watch-count-root="#scope2"
+						 watch-count-root="#scope3"
 						 watch-count=".watch-count"
 						 on-watch-count-update="onWatchCountUpdate(watchCount)">
 						Number of watches: <span class="watch-count"></span>
@@ -129,5 +155,30 @@
 			</tr>
 		</table>
 
+		<table child-scope id="scope4">
+			<thead>
+				<tr>
+					<th colspan="2">One-time binding with ng-repeat</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="icon in ::icons">
+				<td>
+					<span nb-icon-once
+						  ng-attr-data-id="{{::icon.id}}"
+						  data-color="black"></span>
+				</td>
+				<td ng-bind="::icon.id"></td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<div angular-stats
+						 watch-count-root="#scope4"
+						 watch-count=".watch-count"
+						 on-watch-count-update="onWatchCountUpdate(watchCount)">
+						Number of watches: <span class="watch-count"></span>
+					</div>
+				</td>
+			</tr>
+		</table>
 	</body>
 </html>

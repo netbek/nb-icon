@@ -11,7 +11,6 @@
 
 	angular
 		.module('nb.icon', [
-			'pasvaz.bindonce',
 			'nb.modernizr',
 			'nb.svg',
 			'nb.icon.templates'
@@ -76,7 +75,6 @@
 	function nbIconDirective () {
 		return {
 			restrict: 'EA',
-			replace: true,
 			controller: 'nbIconController',
 			templateUrl: 'templates/nb-icon.html',
 			scope: {
@@ -106,7 +104,6 @@
 	function nbIconOnceDirective () {
 		return {
 			restrict: 'EA',
-			replace: true,
 			controller: 'nbIconController',
 			templateUrl: 'templates/nb-icon-once.html',
 			scope: {
