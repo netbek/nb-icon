@@ -22,7 +22,10 @@ module.exports = function (grunt) {
 				' */\n'].join('\n')
 		},
 		jshint: {
-			all: ['Gruntfile.js', 'tasks/**/*.js', 'tests/tests/*.js']
+			options: {
+				jshintrc: true
+			},
+			all: ['Gruntfile.js', 'tasks/**/*.js', 'tests/tests/*.js', 'src/**/*.js', 'demo/**/*.js']
 		},
 		clean: {
 			init: ['build', 'dist', 'tmp'],
@@ -99,6 +102,7 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-svgstore');
 
 	grunt.registerTask('default', [
+		'jshint',
 		'clean:init',
 		'html2js',
 		'concat',
