@@ -11,6 +11,7 @@
 
 	angular
 		.module('nb.icon', [
+			'nb.lodash',
 			'nb.modernizr',
 			'nb.svg',
 			'nb.icon.templates'
@@ -28,7 +29,7 @@
 		};
 		return {
 			set: function (values) {
-				config = window.merge(true, config, values);
+				_.merge(config, values);
 			},
 			$get: function () {
 				return config;
@@ -38,6 +39,8 @@
 
 	nbIconController.$inject = ['$scope', '$attrs', 'Modernizr', 'nbIconConfig'];
 	function nbIconController ($scope, $attrs, Modernizr, nbIconConfig) {
+		/*jshint validthis: true */
+
 		this.attrs = function attrs (scope) {
 			return {
 				id: $attrs.id,
