@@ -5,14 +5,16 @@
 		 nb-svg-view-box-once
 		 data-width="{{::icon.width}}"
 		 data-height="{{::icon.height}}"
-		 class="default">
+		 class="default"
+		 xmlns="http://www.w3.org/2000/svg">
 	<use xlink:href="" nb-svg-xlink-href="{{::('#' + icon.prefix + '-' + icon.id)}}"></use>
 	</svg>
 	<svg ng-if="::(icon.canInlineSvg && icon.hoverId)"
 		 nb-svg-view-box-once
 		 data-width="{{::icon.width}}"
 		 data-height="{{::icon.height}}"
-		 class="hover">
+		 class="hover"
+		 xmlns="http://www.w3.org/2000/svg">
 	<use xlink:href="" nb-svg-xlink-href="{{::('#' + icon.prefix + '-' + icon.hoverId)}}"></use>
 	</svg>
 	<img ng-if="::(!icon.canInlineSvg)"
