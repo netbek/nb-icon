@@ -17,8 +17,34 @@
 	speak: none;
 }
 
+.icon span,
 .icon svg,
-/*.icon span.fallback,*/
+.icon img {
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.icon .hover {
+	display: none;
+}
+
+a:hover .icon.has-hover .default, a:focus .icon.has-hover .default,
+button:hover .icon.has-hover .default, button:focus .icon.has-hover .default {
+	display: none;
+}
+
+a:hover .icon.has-hover .hover, a:focus .icon.has-hover .hover,
+button:hover .icon.has-hover .hover, button:focus .icon.has-hover .hover {
+	display: block;
+}
+
+
+
+
+
+/*
+.icon svg,
 .icon img,
 .icon noscript {
 	display: block;
@@ -30,15 +56,11 @@
 	display: none;
 }
 
-/*.icon span.fallback {
-	display: block;
-}*/
-
 .inlinesvg .icon svg {
 	display: block;
 }
 
-.inlinesvg .icon svg.hover {
+.inlinesvg .icon .hover svg {
 	display: none;
 }
 
@@ -48,40 +70,33 @@
 	display: none;
 }
 
-.inlinesvg a:focus .icon svg.hover,
-.inlinesvg a:hover .icon svg.hover,
-.inlinesvg a:active .icon svg.hover {
+.inlinesvg a:focus .icon .hover svg,
+.inlinesvg a:hover .icon .hover svg,
+.inlinesvg a:active .icon .hover svg {
 	display: block;
 }
 
-/*.no-js .icon span.fallback,
-.inlinesvg .icon span.fallback {
-	background-image: none !important;
-	display: none;
-}*/
-
-/*.icon-[id] span.fallback { background-image: url('icon-[id].png'); background-repeat: no-repeat; }*/
-
-.icon img.fallback {
+.icon .fallback img {
 	display: block;
 }
 
-.icon img.fallback-hover {
+.icon .fallback-hover img {
 	display: none;
 }
 
-a:focus .icon img.fallback,
-a:hover .icon img.fallback,
-a:active .icon img.fallback,
-button:focus .icon img.fallback,
-button:hover .icon img.fallback {
+a:focus .icon .fallback img,
+a:hover .icon .fallback img,
+a:active .icon .fallback img,
+button:focus .icon .fallback img,
+button:hover .icon .fallback img {
 	display: none;
 }
 
-a:focus .icon img.fallback-hover,
-a:hover .icon img.fallback-hover,
-a:active .icon img.fallback-hover,
-button:focus .icon img.fallback-hover,
-button:hover .icon img.fallback-hover {
+a:focus .icon .fallback-hover img,
+a:hover .icon .fallback-hover img,
+a:active .icon .fallback-hover img,
+button:focus .icon .fallback-hover img,
+button:hover .icon .fallback-hover img {
 	display: block;
 }
+*/

@@ -18,7 +18,7 @@
 			function (nbIconConfigProvider) {
 				nbIconConfigProvider.set({
 					prefix: 'icon',
-					pngUrl: 'img/',
+					pngUrl: '../demo/img/',
 					size: 256
 				});
 			}])
@@ -34,6 +34,13 @@
 
 	MainController.$inject = ['$timeout', '$scope'];
 	function MainController ($timeout, $scope) {
+		var ngStats = showAngularStats({
+			position: 'topright'
+		});
+		ngStats.listeners.digestLength.log = function (digestLength) {
+			console.log('Digest: ' + digestLength);
+		};
+
 		$scope.icons = [
 			{
 				id: '0008-quill'
@@ -49,7 +56,7 @@
 
 	runBlock.$inject = ['Modernizr', '$window'];
 	function runBlock (Modernizr, $window) {
-		Modernizr.inlinesvg = false;
-		angular.element($window.document.documentElement).removeClass('inlinesvg');
+//		Modernizr.inlinesvg = false;
+//		angular.element($window.document.documentElement).removeClass('inlinesvg');
 	}
 })(window, window.angular);

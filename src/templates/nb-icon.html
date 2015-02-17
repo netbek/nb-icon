@@ -1,28 +1,22 @@
 <span ng-attr-class="{{icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : '')}}"
 	  ng-attr-title="{{icon.title}}"
 	  aria-hidden="true">
-	<svg ng-if="icon.canInlineSvg"
-		 nb-svg-view-box
-		 data-width="{{icon.width}}"
-		 data-height="{{icon.height}}"
-		 class="default"
-		 xmlns="http://www.w3.org/2000/svg">
-	<use xlink:href="" nb-svg-xlink-href="{{'#' + icon.prefix + '-' + icon.id}}"></use>
-	</svg>
-	<svg ng-if="icon.canInlineSvg && icon.hoverId"
-		 nb-svg-view-box
-		 data-width="{{icon.width}}"
-		 data-height="{{icon.height}}"
-		 class="hover"
-		 xmlns="http://www.w3.org/2000/svg">
-	<use xlink:href="" nb-svg-xlink-href="{{'#' + icon.prefix + '-' + icon.hoverId}}"></use>
-	</svg>
-	<img ng-if="!icon.canInlineSvg"
-		 ng-src="{{icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'}}"
-		 alt=""
-		 class="fallback" />
-	<img ng-if="!icon.canInlineSvg && icon.hoverId"
-		 ng-src="{{icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'}}"
-		 alt=""
-		 class="fallback-hover" />
+	<span ng-if="icon.canInlineSvg"
+		  nb-icon-svg
+		  data-view-box="0 0 {{icon.width}} {{icon.height}}"
+		  data-use="{{'#' + icon.prefix + '-' + icon.id}}"
+		  class="default">
+	</span>
+	<span ng-if="icon.canInlineSvg && icon.hoverId"
+		  nb-icon-svg
+		  data-view-box="0 0 {{icon.width}} {{icon.height}}"
+		  data-use="{{'#' + icon.prefix + '-' + icon.hoverId}}"
+		  class="hover">
+	</span>
+	<span ng-if="!icon.canInlineSvg" class="default">
+		<img ng-src="{{icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'}}" alt="" />
+	</span>
+	<span ng-if="!icon.canInlineSvg && icon.hoverId" class="hover">
+		<img ng-src="{{icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'}}" alt="" />
+	</span>
 </span>

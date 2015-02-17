@@ -2,6 +2,7 @@
   "name": "nb-icon",
   "version": "0.0.1",
   "description": "AngularJS directive for scalable icons",
+  "homepage": "https://github.com/netbek/nb-icon",
   "author": {
     "name": "Hein Bekker",
     "email": "hein@netbek.co.za",
