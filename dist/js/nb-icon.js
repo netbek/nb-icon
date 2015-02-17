@@ -203,7 +203,7 @@
 		};
 	}
 })(window, window.angular);
-angular.module('nb.icon.templates', ['templates/nb-icon-once.html', 'templates/nb-icon-svg.html', 'templates/nb-icon.html']);
+angular.module('nb.icon.templates', ['templates/nb-icon-once.html', 'templates/nb-icon.html']);
 
 angular.module("templates/nb-icon-once.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/nb-icon-once.html",
@@ -230,14 +230,6 @@ angular.module("templates/nb-icon-once.html", []).run(["$templateCache", functio
     "	</span>\n" +
     "</span>\n" +
     "");
-}]);
-
-angular.module("templates/nb-icon-svg.html", []).run(["$templateCache", function($templateCache) {
-  $templateCache.put("templates/nb-icon-svg.html",
-    "<svg viewBox=\"0 0 256 256\"\n" +
-    "	xmlns=\"http://www.w3.org/2000/svg\">\n" +
-    "	<use xlink:href=\"{{'#' + icon.prefix + '-' + icon.id}}\"></use>\n" +
-    "</svg>");
 }]);
 
 angular.module("templates/nb-icon.html", []).run(["$templateCache", function($templateCache) {
