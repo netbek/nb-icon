@@ -22,8 +22,7 @@
 	],
 	"dependencies": {
 		"angularjs": "~1.3.13",
-		"nb-lodash": "https://github.com/netbek/nb-lodash.git#master",
-		"nb-modernizr": "https://github.com/netbek/nb-modernizr.git#master"
+		"nb-lodash": "https://github.com/netbek/nb-lodash.git#master"
 	},
 	"devDependencies": {
 		"ng-stats": "~2.0.4",

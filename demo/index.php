@@ -10,10 +10,8 @@
 
 		<script src="../bower_components/angular/angular.js"></script>
 		<script src="../bower_components/angular-bindonce/bindonce.js"></script>
-		<script src="../bower_components/modernizr/index.js"></script>
 		<script src="../bower_components/lodash/lodash.js"></script>
 		<script src="../bower_components/ng-stats/dist/ng-stats.js"></script>
-		<script src="../bower_components/nb-modernizr/dist/js/nb-modernizr.js"></script>
 		<script src="../bower_components/nb-lodash/dist/js/nb-lodash.js"></script>
 
 		<script src="../dist/js/nb-icon.js"></script>

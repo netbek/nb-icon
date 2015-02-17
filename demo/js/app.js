@@ -54,9 +54,7 @@
 		];
 	}
 
-	runBlock.$inject = ['Modernizr', '$window'];
-	function runBlock (Modernizr, $window) {
-//		Modernizr.inlinesvg = false;
-//		angular.element($window.document.documentElement).removeClass('inlinesvg');
+	runBlock.$inject = ['$window'];
+	function runBlock ($window) {
 	}
 })(window, window.angular);

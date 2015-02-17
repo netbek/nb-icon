@@ -1,22 +1,4 @@
-<span ng-attr-class="{{icon.prefix + ' ' + icon.prefix + '-' + icon.id + (icon.hoverId ? ' has-hover' : '')}}"
-	  ng-attr-title="{{icon.title}}"
+<span ng-attr-class="{{prefix + ' ' + prefix + '-' + id + (hoverId ? ' has-hover' : '')}}"
+	  ng-attr-title="{{title}}"
 	  aria-hidden="true">
-	<span ng-if="icon.canInlineSvg"
-		  nb-icon-svg
-		  data-view-box="0 0 {{icon.width}} {{icon.height}}"
-		  data-use="{{'#' + icon.prefix + '-' + icon.id}}"
-		  class="default">
-	</span>
-	<span ng-if="icon.canInlineSvg && icon.hoverId"
-		  nb-icon-svg
-		  data-view-box="0 0 {{icon.width}} {{icon.height}}"
-		  data-use="{{'#' + icon.prefix + '-' + icon.hoverId}}"
-		  class="hover">
-	</span>
-	<span ng-if="!icon.canInlineSvg" class="default">
-		<img ng-src="{{icon.pngUrl + icon.prefix + '-' + icon.id + (icon.color ? '-' + icon.color : icon.color) + '.png'}}" alt="" />
-	</span>
-	<span ng-if="!icon.canInlineSvg && icon.hoverId" class="hover">
-		<img ng-src="{{icon.pngUrl + icon.prefix + '-' + icon.hoverId + (icon.hoverColor ? '-' + icon.hoverColor : icon.hoverColor) + '.png'}}" alt="" />
-	</span>
 </span>

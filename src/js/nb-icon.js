@@ -12,16 +12,12 @@
 	angular
 		.module('nb.icon', [
 			'nb.lodash',
-			'nb.modernizr',
 			'nb.icon.templates'
 		])
 		.provider('nbIconConfig', nbIconConfig)
 		.controller('nbIconController', nbIconController)
 		.directive('nbIcon', nbIconDirective)
-		.directive('nbIconOnce', nbIconOnceDirective)
-		.controller('nbIconSvgController', nbIconSvgController)
-		.directive('nbIconSvg', nbIconSvgDirective)
-		.directive('nbIconSvgOnce', nbIconSvgOnceDirective);
+		.directive('nbIconOnce', nbIconOnceDirective);
 
 	function nbIconConfig () {
 		var config = {
@@ -39,9 +35,22 @@
 		};
 	}
 
-	nbIconController.$inject = ['$scope', '$attrs', 'Modernizr', 'nbIconConfig'];
-	function nbIconController ($scope, $attrs, Modernizr, nbIconConfig) {
+	var flags = {};
+
+	// https://github.com/Modernizr/Modernizr/blob/master/feature-detects/svg.js
+	flags.svg = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
+
+	// https://github.com/Modernizr/Modernizr/blob/master/feature-detects/svg/inline.js
+	flags.inlinesvg = (function () {
+		var div = document.createElement('div');
+		div.innerHTML = '<svg/>';
+		return (div.firstChild && div.firstChild.namespaceURI) == 'http://www.w3.org/2000/svg';
+	})();
+
+	nbIconController.$inject = ['$scope', '$element', '$attrs', 'nbIconConfig'];
+	function nbIconController ($scope, $element, $attrs, nbIconConfig) {
 		/*jshint validthis: true */
+		$scope.prefix = nbIconConfig.prefix;
 
 		this.attrs = function nbIconControllerAttrs (scope) {
 			return {
@@ -55,26 +64,38 @@
 			};
 		};
 
-		this.update = function nbIconControllerUpdate (options) {
-			options.pngUrl = nbIconConfig.pngUrl;
-			options.prefix = nbIconConfig.prefix;
-			options.canInlineSvg = Modernizr.inlinesvg;
+		this.update = function nbIconControllerUpdate (attrs) {
+			var defaultIcon = {
+				className: 'default',
+				id: attrs.id,
+				color: attrs.color,
+				width: attrs.width || nbIconConfig.size,
+				height: attrs.height || nbIconConfig.size
+			};
 
-			if (!options.width) {
-				options.width = nbIconConfig.size;
-			}
-			if (!options.height) {
-				options.height = nbIconConfig.size;
-			}
-			if (!options.hoverId) {
-				options.hoverId = options.id;
-			}
-			if (!options.hoverColor) {
-				options.hoverColor = options.color;
-			}
+			var hoverIcon = {
+				className: 'hover',
+				id: attrs.hoverId || attrs.id,
+				color: attrs.hoverColor || attrs.color,
+				width: defaultIcon.width,
+				height: defaultIcon.height
+			};
 
-			$scope.icon = options;
+			if (flags.svg && flags.inlinesvg) {
+				$element.html(renderSvg(defaultIcon) + renderSvg(hoverIcon));
+			}
+			else {
+				$element.html(renderPng(defaultIcon) + renderPng(hoverIcon));
+			}
 		};
+
+		function renderPng (opts) {
+			return '<img class="' + opts.className + '" src="' + nbIconConfig.pngUrl + nbIconConfig.prefix + '-' + opts.id + (opts.color ? '-' + opts.color : opts.color) + '.png" alt="" />';
+		}
+
+		function renderSvg (opts) {
+			return '<svg class="' + opts.className + '" viewBox="0 0 ' + opts.width + ' ' + opts.height + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#' + nbIconConfig.prefix + '-' + opts.id + '" /></svg>';
+		}
 	}
 
 	function nbIconDirective () {
@@ -94,7 +115,9 @@
 			},
 			link: function (scope, element, attrs, controller) {
 				var deregister = scope.$watch(controller.attrs, function watchNbIconDirective (newValue, oldValue, scope) {
-					controller.update(newValue);
+					if (newValue && newValue.id) {
+						controller.update(newValue);
+					}
 				}, true);
 
 				scope.$on('$destroy', function () {
@@ -124,76 +147,10 @@
 			},
 			link: function (scope, element, attrs, controller) {
 				var deregister = scope.$watch(controller.attrs, function watchNbIconOnceDirective (newValue, oldValue, scope) {
-					controller.update(newValue);
-					deregister();
-				}, true);
-
-				scope.$on('$destroy', function () {
-					deregister();
-				});
-			}
-		};
-	}
-
-	nbIconSvgController.$inject = ['$element', '$attrs'];
-	function nbIconSvgController ($element, $attrs) {
-		/*jshint validthis: true */
-
-		/**
-		 * @param {Scope} scope
-		 * @returns {Object}
-		 */
-		this.attrs = function nbIconSvgControllerAttrs (scope) {
-			return {
-				use: $attrs.use,
-				viewBox: $attrs.viewBox
-			};
-		};
-
-		/**
-		 * Opera 12 does not render new symbol if `xlink:href` attribute of
-		 * <use> is changed. Chrome 40, Firefox 35 and IE 9 do. We replace <svg>
-		 * for sake of compatibility.
-		 *
-		 * @param {Object} options
-		 */
-		this.update = function nbIconSvgControllerUpdate (options) {
-			var html = '<svg viewBox="' + options.viewBox + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="' + options.use + '" /></svg>';
-			$element.html(html);
-		};
-	}
-
-	function nbIconSvgDirective () {
-		return {
-			restrict: 'EA',
-			transclude: true,
-			scope: true,
-			controller: 'nbIconSvgController',
-			link: function (scope, element, attrs, controller, transclude) {
-				var deregister = scope.$watch(controller.attrs, function watchNbIconSvgDirective (newValue, oldValue, scope) {
-					controller.update(newValue);
-				}, true);
-
-				scope.$on('$destroy', function () {
-					deregister();
-				});
-			}
-		};
-	}
-
-	/**
-	 * One-time binding with no watchers.
-	 */
-	function nbIconSvgOnceDirective () {
-		return {
-			restrict: 'EA',
-			transclude: true,
-			scope: true,
-			controller: 'nbIconSvgController',
-			link: function (scope, element, attrs, controller, transclude) {
-				var deregister = scope.$watch(controller.attrs, function watchNbIconSvgDirective (newValue, oldValue, scope) {
-					controller.update(newValue);
-					deregister();
+					if (newValue && newValue.id) {
+						controller.update(newValue);
+						deregister();
+					}
 				}, true);
 
 				scope.$on('$destroy', function () {
