@@ -93,7 +93,7 @@
 		};
 
 		function renderPng (opts) {
-			return '<img class="' + opts.className + '" src="' + nbIconConfig.pngUrl + nbIconConfig.prefix + '-' + opts.id + (opts.color ? '-' + opts.color : opts.color) + '.png" alt="" />';
+			return '<img class="' + opts.className + '" src="' + nbIconConfig.pngUrl + nbIconConfig.prefix + '-' + opts.id + (opts.color ? '-' + opts.color : '') + '.png" alt="" />';
 		}
 
 		function renderSvg (opts) {
