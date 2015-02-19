@@ -170,7 +170,9 @@ angular.module("templates/nb-icon-once.html", []).run(["$templateCache", functio
   $templateCache.put("templates/nb-icon-once.html",
     "<span ng-attr-class=\"{{::(prefix + ' ' + prefix + '-' + id + (hoverId ? ' has-hover' : ''))}}\"\n" +
     "	  ng-attr-title=\"{{::title}}\"\n" +
-    "	  aria-hidden=\"true\">\n" +
+    "	  aria-hidden=\"true\"\n" +
+    "	  draggable=\"false\"\n" +
+    "	  ondragstart=\"return false;\">\n" +
     "</span>\n" +
     "");
 }]);
@@ -179,7 +181,9 @@ angular.module("templates/nb-icon.html", []).run(["$templateCache", function($te
   $templateCache.put("templates/nb-icon.html",
     "<span ng-attr-class=\"{{prefix + ' ' + prefix + '-' + id + (hoverId ? ' has-hover' : '')}}\"\n" +
     "	  ng-attr-title=\"{{title}}\"\n" +
-    "	  aria-hidden=\"true\">\n" +
+    "	  aria-hidden=\"true\"\n" +
+    "	  draggable=\"false\"\n" +
+    "	  ondragstart=\"return false;\">\n" +
     "</span>\n" +
     "");
 }]);
