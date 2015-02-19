@@ -21,9 +21,10 @@
 
 	function nbIconConfig () {
 		var config = {
-			prefix: 'icon',
-			pngUrl: '', // URL of directory with PNG fallback images
-			size: 128 // Width and height of SVG
+			prefix: 'icon', // {String}
+			pngUrl: '', // {String} URL of directory with PNG fallback images
+			size: 128, // {Number} Width and height of SVG
+			svg: undefined // {Boolean} Override SVG feature detection (can be used for testing fallback images)
 		};
 		return {
 			set: function (values) {
@@ -50,6 +51,8 @@
 	nbIconController.$inject = ['$scope', '$element', '$attrs', 'nbIconConfig'];
 	function nbIconController ($scope, $element, $attrs, nbIconConfig) {
 		/*jshint validthis: true */
+		var useSvg = (nbIconConfig.svg === true || (nbIconConfig.svg === undefined && flags.svg && flags.inlinesvg));
+
 		$scope.prefix = nbIconConfig.prefix;
 
 		this.attrs = function nbIconControllerAttrs (scope) {
@@ -81,7 +84,7 @@
 				height: defaultIcon.height
 			};
 
-			if (flags.svg && flags.inlinesvg) {
+			if (useSvg) {
 				$element.html(renderSvg(defaultIcon) + renderSvg(hoverIcon));
 			}
 			else {
@@ -90,7 +93,7 @@
 		};
 
 		function renderPng (opts) {
-			return '<img class="' + opts.className + '" src="' + nbIconConfig.pngUrl + nbIconConfig.prefix + '-' + opts.id + (opts.color ? '-' + opts.color : opts.color) + '.png" alt="" />';
+			return '<img class="' + opts.className + '" src="' + nbIconConfig.pngUrl + nbIconConfig.prefix + '-' + opts.id + (opts.color ? '-' + opts.color : '') + '.png" alt="" />';
 		}
 
 		function renderSvg (opts) {
