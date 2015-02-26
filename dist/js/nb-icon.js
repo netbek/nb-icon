@@ -97,7 +97,7 @@
 		}
 
 		function renderSvg (opts) {
-			return '<svg class="' + opts.className + '" viewBox="0 0 ' + opts.width + ' ' + opts.height + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#' + nbIconConfig.prefix + '-' + opts.id + '" /></svg>';
+			return '<svg class="' + opts.className + '" viewBox="0 0 ' + opts.width + ' ' + opts.height + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#' + nbIconConfig.prefix + '-' + opts.id + '"></use></svg>';
 		}
 	}
 

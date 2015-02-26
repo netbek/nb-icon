@@ -12,6 +12,7 @@ Tested in:
 * Firefox 35
 * IE 9
 * Opera 12
+* iOS 6 Safari
 
 ## Credits
 
