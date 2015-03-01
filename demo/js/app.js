@@ -17,6 +17,10 @@
 		.config(['nbIconConfigProvider',
 			function (nbIconConfigProvider) {
 				nbIconConfigProvider.set({
+					colors: {
+						black: '#000',
+						blue: '#0000FF'
+					},
 					prefix: 'icon',
 					pngUrl: '../demo/img/',
 					size: 256

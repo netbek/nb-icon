@@ -56,3 +56,16 @@ table tr:nth-child(2) .icon {
 table tr:nth-child(3) .icon {
 	font-size: 3em;
 }
+
+/**
+ * Note: The following is optional because the `fill` attribute will be set.
+ * Any declarations will override the `fill` attribute.
+ */
+
+svg.blue {
+	fill: #0000FF;
+}
+
+svg.black {
+	fill: #000;
+}

@@ -21,6 +21,7 @@
 
 	function nbIconConfig () {
 		var config = {
+			colors: {}, // {Object} Colors of default and hover icons, if any. Key: color, value: hexadecimal or named value (compatible with <svg> `fill` attribute)
 			prefix: 'icon', // {String}
 			pngUrl: '', // {String} URL of directory with PNG fallback images
 			size: 128, // {Number} Width and height of SVG
@@ -68,36 +69,59 @@
 		};
 
 		this.update = function nbIconControllerUpdate (attrs) {
+			var color = attrs.color;
 			var defaultIcon = {
-				className: 'default',
+				className: 'default' + (color ? ' ' + color : ''),
 				id: attrs.id,
-				color: attrs.color,
+				color: color,
+				fill: getFill(color),
 				width: attrs.width || nbIconConfig.size,
 				height: attrs.height || nbIconConfig.size
 			};
 
-			var hoverIcon = {
-				className: 'hover',
-				id: attrs.hoverId || attrs.id,
-				color: attrs.hoverColor || attrs.color,
-				width: defaultIcon.width,
-				height: defaultIcon.height
-			};
+			var hoverIcon;
+			if (attrs.hoverId || attrs.hoverColor) {
+				var hoverColor = attrs.hoverColor || color;
+				hoverIcon = {
+					className: 'hover' + (hoverColor ? ' ' + hoverColor : ''),
+					id: attrs.hoverId || attrs.id,
+					color: hoverColor,
+					fill: getFill(hoverColor),
+					width: defaultIcon.width,
+					height: defaultIcon.height
+				};
+			}
 
+			var html;
 			if (useSvg) {
-				$element.html(renderSvg(defaultIcon) + renderSvg(hoverIcon));
+				html = renderSvg(defaultIcon);
+				if (hoverIcon) {
+					html += renderSvg(hoverIcon);
+				}
 			}
 			else {
-				$element.html(renderPng(defaultIcon) + renderPng(hoverIcon));
+				html = renderPng(defaultIcon);
+				if (hoverIcon) {
+					html += renderPng(hoverIcon);
+				}
 			}
+
+			$element.html(html);
 		};
+
+		function getFill (color) {
+			if (color && color in nbIconConfig.colors) {
+				return nbIconConfig.colors[color];
+			}
+			return false;
+		}
 
 		function renderPng (opts) {
 			return '<img class="' + opts.className + '" src="' + nbIconConfig.pngUrl + nbIconConfig.prefix + '-' + opts.id + (opts.color ? '-' + opts.color : '') + '.png" alt="" />';
 		}
 
 		function renderSvg (opts) {
-			return '<svg class="' + opts.className + '" viewBox="0 0 ' + opts.width + ' ' + opts.height + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#' + nbIconConfig.prefix + '-' + opts.id + '"></use></svg>';
+			return '<svg class="' + opts.className + '"' + (opts.fill ? ' fill="' + opts.fill + '"' : '') + ' viewBox="0 0 ' + opts.width + ' ' + opts.height + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#' + nbIconConfig.prefix + '-' + opts.id + '"></use></svg>';
 		}
 	}
 
