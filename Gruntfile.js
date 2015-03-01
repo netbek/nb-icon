@@ -74,7 +74,10 @@ module.exports = function (grunt) {
 			}
 		},
 		svgstore: {
-			options: {},
+			options: {
+				includeTitleElement: false,
+				preserveDescElement: false
+			},
 			src: {
 				files: {
 					'demo/svg/icon.svg': 'demo/svg/icon/*.svg'
