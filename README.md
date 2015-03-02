@@ -2,9 +2,14 @@
 
 AngularJS directive for scalable icons (SVG with PNG fallback)
 
-## Note
+## To do
 
-If using `<use>`, then one cannot override an existing fill color of `<svg>` or its child elements. SVGs that should be colorized should not have a `fill` attribute.
+* Add SVG injection to fix `<use>` bug
+
+## Notes about SVG and `<use>`
+
+* One cannot override an existing fill color of `<svg>` or its child elements. SVGs that should be colorized should not have a `fill` attribute.
+* Icons are not displayed on second-level pages, e.g. /path/to/page, if `<base>` is present https://github.com/angular/angular.js/issues/8934
 
 ## Compatibility
 
