@@ -34,6 +34,7 @@
 				<td>
 					<a><span nb-icon
 							 data-id="0008-quill"
+							 data-title="Quill"
 							 data-color="black"
 							 data-hover-color="blue"></span></a>
 				</td>
@@ -45,6 +46,7 @@
 				<td>
 					<a><span nb-icon
 							 data-id="0016-camera"
+							 data-title="Camera"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
 				</td>
@@ -56,6 +58,7 @@
 				<td>
 					<a><span nb-icon
 							 data-id="0016-camera"
+							 data-title="Camera"
 							 data-hover-id="0014-image"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
@@ -112,6 +115,7 @@
 				<td>
 					<a><span nb-icon-once
 							 data-id="0008-quill"
+							 data-title="Quill"
 							 data-color="black"
 							 data-hover-color="blue"></span></a>
 				</td>
@@ -123,6 +127,7 @@
 				<td>
 					<a><span nb-icon-once
 							 data-id="0016-camera"
+							 data-title="Camera"
 							 data-width="192"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
@@ -136,6 +141,7 @@
 					<a><span nb-icon-once
 							 data-id="0016-camera"
 							 data-hover-id="0014-image"
+							 data-title="Image"
 							 data-width="192"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
