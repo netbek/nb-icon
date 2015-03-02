@@ -24,7 +24,7 @@
 			colors: {}, // {Object} Colors of default and hover icons, if any. Key: color, value: hexadecimal or named value (compatible with <svg> `fill` attribute)
 			prefix: 'icon', // {String}
 			pngUrl: '', // {String} URL of directory with PNG fallback images
-			size: 128, // {Number} Width and height of SVG
+			size: 128, // {Number} Width and height of SVG (viewBox)
 			svg: undefined // {Boolean} Override SVG feature detection (can be used for testing fallback images)
 		};
 		return {
@@ -39,6 +39,8 @@
 
 	var flags = {};
 
+	flags.serialize = (typeof XMLSerializer == 'function');
+
 	// https://github.com/Modernizr/Modernizr/blob/master/feature-detects/svg.js
 	flags.svg = !!document.createElementNS && !!document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGRect;
 
@@ -49,10 +51,60 @@
 		return (div.firstChild && div.firstChild.namespaceURI) == 'http://www.w3.org/2000/svg';
 	})();
 
+	var svgSymbols = {};
+	var xmlSerializer;
+
+	if (flags.serialize) {
+		xmlSerializer = new XMLSerializer();
+	}
+
+	/**
+	 * Returns the child nodes of a <symbol> as a string.
+	 *
+	 * Symbols are "injected" because <use xlink:href="#symbol"> does not work
+	 * on second-level pages, e.g. /path/to/page, if <base> is in <head>.
+	 * https://github.com/angular/angular.js/issues/8934
+	 *
+	 * @param {String} elmId DOM element ID
+	 * @returns {Object}
+	 */
+	function getSvgSymbol (elmId) {
+		if (elmId in svgSymbols) {
+			return svgSymbols[elmId];
+		}
+
+		if (!xmlSerializer) {
+			throw new Error('XMLSerializer is not instantiated.');
+		}
+
+		var viewBox;
+		var inner = '';
+		var elm = document.getElementById(elmId);
+
+		// If symbol is an element node.
+		if (elm && elm.nodeType === 1) {
+			viewBox = elm.getAttribute('viewBox');
+
+			_.forEach(elm.childNodes, function (node) {
+				// If child node is not a text node.
+				if (node.nodeType !== 3) {
+					inner += xmlSerializer.serializeToString(node);
+				}
+			});
+		}
+
+		svgSymbols[elmId] = {
+			viewBox: viewBox,
+			inner: inner
+		};
+
+		return svgSymbols[elmId];
+	}
+
 	nbIconController.$inject = ['$scope', '$element', '$attrs', 'nbIconConfig'];
 	function nbIconController ($scope, $element, $attrs, nbIconConfig) {
 		/*jshint validthis: true */
-		var useSvg = (nbIconConfig.svg === true || (nbIconConfig.svg === undefined && flags.svg && flags.inlinesvg));
+		var useSvg = (nbIconConfig.svg === true || (nbIconConfig.svg === undefined && flags.serialize && flags.svg && flags.inlinesvg));
 
 		$scope.prefix = nbIconConfig.prefix;
 
@@ -121,7 +173,9 @@
 		}
 
 		function renderSvg (opts) {
-			return '<svg class="' + opts.className + '"' + (opts.fill ? ' fill="' + opts.fill + '"' : '') + ' viewBox="0 0 ' + opts.width + ' ' + opts.height + '" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><use xlink:href="#' + nbIconConfig.prefix + '-' + opts.id + '"></use></svg>';
+			var symbol = getSvgSymbol(nbIconConfig.prefix + '-' + opts.id);
+			var viewBox = symbol.viewBox || '0 0 ' + opts.width + ' ' + opts.height;
+			return '<svg class="' + opts.className + '"' + (opts.fill ? ' fill="' + opts.fill + '"' : '') + ' viewBox="' + viewBox + '" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' + symbol.inner + '</svg>';
 		}
 	}
 

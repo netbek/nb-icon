@@ -22,7 +22,7 @@
 		<script src="../demo/js/app.js"></script>
 	</head>
 	<body ng-controller="MainController">
-		<div class="hidden"><?php print(file_get_contents(dirname(__FILE__) . '/svg/icon.svg')); ?></div>
+		<div id="svgstore" class="visuallyhidden"><?php print(file_get_contents(dirname(__FILE__) . '/svg/icon.svg')); ?></div>
 
 		<table child-scope id="scope1">
 			<thead>
@@ -45,7 +45,6 @@
 				<td>
 					<a><span nb-icon
 							 data-id="0016-camera"
-							 data-width="192"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
 				</td>
@@ -58,7 +57,6 @@
 					<a><span nb-icon
 							 data-id="0016-camera"
 							 data-hover-id="0014-image"
-							 data-width="192"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
 				</td>
