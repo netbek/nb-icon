@@ -68,6 +68,20 @@
 				</td>
 			</tr>
 			<tr>
+				<td>
+					<a><span nb-icon
+							 data-id="0027-bullhorn-512x128"
+							 data-width="512"
+							 data-height="128"
+							 data-title="Bullhorn"
+							 data-color="black"
+							 data-hover-color="blue"></span></a>
+				</td>
+				<td>
+					Black bullhorn icon turns blue on hover (4:1)
+				</td>
+			</tr>
+			<tr>
 				<td colspan="2">
 					<div angular-stats
 						 watch-count-root="#scope1"
@@ -128,7 +142,6 @@
 					<a><span nb-icon-once
 							 data-id="0016-camera"
 							 data-title="Camera"
-							 data-width="192"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
 				</td>
@@ -142,12 +155,25 @@
 							 data-id="0016-camera"
 							 data-hover-id="0014-image"
 							 data-title="Image"
-							 data-width="192"
 							 data-color="blue"
 							 data-hover-color="black"></span></a>
 				</td>
 				<td>
 					Blue camera turns to black picture on hover (3x)
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<a><span nb-icon-once
+							 data-id="0027-bullhorn-512x128"
+							 data-width="512"
+							 data-height="128"
+							 data-title="Bullhorn"
+							 data-color="black"
+							 data-hover-color="blue"></span></a>
+				</td>
+				<td>
+					Black bullhorn icon turns blue on hover (4:1)
 				</td>
 			</tr>
 			<tr>

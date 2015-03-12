@@ -159,6 +159,11 @@
 			}
 
 			$element.html(html);
+
+			// Use padding-bottom hack on container to preserve aspect ratio.
+			// @see https://css-tricks.com/scale-svg
+			var ratio = Number(defaultIcon.height / defaultIcon.width * 10000) / 100;
+			$scope.style = (ratio === 100 ? '' : 'height: 0; padding: 0 0 ' + ratio + '% 0;');
 		};
 
 		function getFill (color) {
@@ -175,7 +180,7 @@
 		function renderSvg (opts) {
 			var symbol = getSvgSymbol(nbIconConfig.prefix + '-' + opts.id);
 			var viewBox = symbol.viewBox || '0 0 ' + opts.width + ' ' + opts.height;
-			return '<svg class="' + opts.className + '"' + (opts.fill ? ' fill="' + opts.fill + '"' : '') + ' viewBox="' + viewBox + '" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' + symbol.inner + '</svg>';
+			return '<svg class="' + opts.className + '"' + (opts.fill ? ' fill="' + opts.fill + '"' : '') + ' viewBox="' + viewBox + '" preserveAspectRatio="xMidYMid meet" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">' + symbol.inner + '</svg>';
 		}
 	}
 
@@ -247,6 +252,7 @@ angular.module('nb.icon.templates', ['templates/nb-icon-once.html', 'templates/n
 angular.module("templates/nb-icon-once.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/nb-icon-once.html",
     "<span ng-attr-class=\"{{::(prefix + ' ' + prefix + '-' + id + (hoverId || hoverColor ? ' has-hover' : ''))}}\"\n" +
+    "	  ng-attr-style=\"{{::('' + style)}}\"\n" +
     "	  ng-attr-title=\"{{::('' + title)}}\"\n" +
     "	  aria-hidden=\"true\"\n" +
     "	  draggable=\"false\"\n" +
@@ -258,6 +264,7 @@ angular.module("templates/nb-icon-once.html", []).run(["$templateCache", functio
 angular.module("templates/nb-icon.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("templates/nb-icon.html",
     "<span ng-attr-class=\"{{prefix + ' ' + prefix + '-' + id + (hoverId || hoverColor ? ' has-hover' : '')}}\"\n" +
+    "	  ng-attr-style=\"{{'' + style}}\"\n" +
     "	  ng-attr-title=\"{{'' + title}}\"\n" +
     "	  aria-hidden=\"true\"\n" +
     "	  draggable=\"false\"\n" +
