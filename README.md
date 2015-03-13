@@ -24,6 +24,10 @@ Possibly useful in future:
 
 * https://github.com/iconic/SVGInjector
 
+## Ports
+
+jQuery https://github.com/netbek/rh-icon
+
 ## Credits
 
 * Demo icons by [IcoMoon](https://icomoon.io) (CC BY 4.0 or GPL)
